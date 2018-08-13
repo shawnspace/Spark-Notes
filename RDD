@@ -1,0 +1,24 @@
+# 构造RDD
+1. parallelizing an existing collection in your driver program
+2. referencing a dataset in an external storage system, such as a shared filesystem, HDFS, HBase, or any data source offering a Hadoop InputFormat
+
+Parallelized Collections
+sc.parallelize(data, numSlices = 10)，将data数据分成10个不同的partition，每个partition由一个task（1 thread of cpu）来负责
+
+External Datasets
+sc.textFile("data.txt")
+By default, Spark creates one partition for each block of the file. You can ask for a higher number of partitions by passing a larger value. Cannot have fewer partitions than blocks.
+
+# RDD operation
+1. transformations: create a new dataset from an existing one
+2. actions: return a value to the driver program after running a computation on the dataset
+
+Transformation
+1. All transformations in Spark are lazy.
+2. The transformations are only computed when an action requires a result to be returned to the driver program
+3. By default, each transformed RDD may be recomputed each time you run an action on it. You may persist an RDD in memory using the persist (or cache) method, in which case Spark will keep the elements around on the cluster for much faster access the next time
+
+Passing Functions to Spark
+1. Lambda expressions, for simple functions that can be written as an expression. (Lambdas do not support multi-statement functions or statements that do not return a value.)
+2. Local defs inside the function calling into Spark, for longer code
+3. Top-level functions in a module
