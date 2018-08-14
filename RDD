@@ -13,11 +13,6 @@ By default, Spark creates one partition for each block of the file. You can ask 
 1. transformations: create a new dataset from an existing one
 2. actions: return a value to the driver program after running a computation on the dataset
 
-Persist 
-1. All transformations in Spark are lazy.
-2. The transformations are only computed when an action requires a result to be returned to the driver program
-3. By default, each transformed RDD may be recomputed each time you run an action on it. You may persist an RDD in memory using the persist (or cache) method, in which case Spark will keep the elements around on the cluster for much faster access the next time
-
 Passing Functions to Spark
 1. Lambda expressions, for simple functions that can be written as an expression. (Lambdas do not support multi-statement functions or statements that do not return a value.)
 2. Local defs inside the function calling into Spark, for longer code
@@ -38,6 +33,7 @@ foreach(func)	Run a function func on each element of the dataset. This is usuall
 
 Transformation
 对RDD操作后得到的还是RDD
+All transformations in Spark are lazy, they are only computed when an action requires a result to be returned to the driver program
 map(func)	Return a new distributed dataset formed by passing each element of the source through a function func.
 filter(func)	Return a new dataset formed by selecting those elements of the source on which func returns true. 该操作之后RDD往往会大量减少
 mapPartitions(func)	Similar to map, but runs separately on each partition (block) of the RDD, so func must be of type Iterator<T> => Iterator<U> when running on an RDD of type T. 相比于map，性能上有提升
@@ -50,5 +46,27 @@ cogroup(otherDataset, [numPartitions])	When called on datasets of type (K, V) an
 
 Shuffle operation
 re-distributing data so that it’s grouped differently across partitions
+Operations which can cause a shuffle include repartition operations like repartition and coalesce, ‘ByKey operations (except for counting) like groupByKey and reduceByKey, and join operations like cogroup and join
+The Shuffle is an expensive operation
+Spark generates sets of tasks - "map" tasks to organize the data, and a set of "reduce" tasks to aggregate it.
+
+Persist 
+1. By default, each transformed RDD may be recomputed each time you run an action on it. You may persist an RDD in memory using the persist (or cache) method, in which case Spark will keep the elements around on the cluster for much faster access the next time
+2. When you persist an RDD, each node stores any partitions of it that it computes in memory. This allows future actions to be much faster (often by more than 10x)
+3. You can mark an RDD to be persisted using the persist() or cache() methods on it, before the first time it is computed in an action
+4. persist()可以指定不同的storage level
+
+#Shared variable
+
+Broadcast Variable
+Broadcast variables keep a read-only variable cached on each machine rather than shipping a copy of it with tasks
+创建：broadcastVar = sc.broadcast([1, 2, 3])
+
+Accumulators
+only “added” to through an associative and commutative operation
+创建：SparkContext.accumulator(v)
+Tasks running on a cluster can then add to it using the add method or the += operator
+Only the driver program can read the accumulator’s value, using its value method
+Accumulators are being updated within an operation on an RDD, their value is only updated once that RDD is computed as part of an action
 
 
