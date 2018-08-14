@@ -13,7 +13,7 @@ By default, Spark creates one partition for each block of the file. You can ask 
 1. transformations: create a new dataset from an existing one
 2. actions: return a value to the driver program after running a computation on the dataset
 
-Transformation
+Persist 
 1. All transformations in Spark are lazy.
 2. The transformations are only computed when an action requires a result to be returned to the driver program
 3. By default, each transformed RDD may be recomputed each time you run an action on it. You may persist an RDD in memory using the persist (or cache) method, in which case Spark will keep the elements around on the cluster for much faster access the next time
@@ -22,3 +22,33 @@ Passing Functions to Spark
 1. Lambda expressions, for simple functions that can be written as an expression. (Lambdas do not support multi-statement functions or statements that do not return a value.)
 2. Local defs inside the function calling into Spark, for longer code
 3. Top-level functions in a module
+Note: 传递class里的函数和成员给spark的话，会将整个object复制过去，造成空间浪费。最好将类的成员赋值给一个局部变量，再传递这个局部变量
+
+关于closure
+closure（constructs like loops or locally defined methods）should not be used to mutate some global state。The variables within the closure sent to each executor are now copies in each worker node. 应该使用accumulator 变量来存这种需要被更新的变量。
+
+Action
+多半是一些统计性的操作，来向driver node返回一些小数据
+reduce(func) Aggregate the elements of the dataset
+collect()	Return all the elements of the dataset as an array at the driver program. This is usually useful after a filter or other operation that returns a sufficiently small subset of the data.
+take(n)	Return an array with the first n elements of the dataset.
+count()	Return the number of elements in the dataset.
+countByKey()	Only available on RDDs of type (K, V). Returns a hashmap of (K, Int) pairs with the count of each key.
+foreach(func)	Run a function func on each element of the dataset. This is usually done for side effects such as updating an Accumulator or interacting with external storage systems. 
+
+Transformation
+对RDD操作后得到的还是RDD
+map(func)	Return a new distributed dataset formed by passing each element of the source through a function func.
+filter(func)	Return a new dataset formed by selecting those elements of the source on which func returns true. 该操作之后RDD往往会大量减少
+mapPartitions(func)	Similar to map, but runs separately on each partition (block) of the RDD, so func must be of type Iterator<T> => Iterator<U> when running on an RDD of type T. 相比于map，性能上有提升
+union(otherDataset)	Return a new dataset that contains the union of the elements in the source dataset and the argument.
+distinct([numPartitions]))	Return a new dataset that contains the distinct elements of the source dataset.
+groupByKey([numPartitions])	When called on a dataset of (K, V) pairs, returns a dataset of (K, Iterable<V>) pairs. 
+reduceByKey(func, [numPartitions])	When called on a dataset of (K, V) pairs, returns a dataset of (K, V) pairs where the values for each key are aggregated using the given reduce function func, which must be of type (V,V) => V. 
+join(otherDataset, [numPartitions])	When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (V, W)) pairs with all pairs of elements for each key. Outer joins are supported through leftOuterJoin, rightOuterJoin, and fullOuterJoin.
+cogroup(otherDataset, [numPartitions])	When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (Iterable<V>, Iterable<W>)) tuples. This operation is also called groupWith.
+
+Shuffle operation
+re-distributing data so that it’s grouped differently across partitions
+
+
