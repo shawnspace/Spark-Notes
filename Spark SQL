@@ -1,28 +1,29 @@
-Why Spark SQL
+# Why Spark SQL
 专门用于处理structured data的API。Internally, Spark SQL uses this extra information to perform extra optimizations
-
 SQL:进行SQL query的API，得到的数据被表示为 Dataset/DataFrame 对象
-
 Datasets/DataFrames：和RDD of row一样，Datasets是一个 distributed collection of data，provides the benefits of RDDs with the benefits of Spark SQL’s optimized execution engine。A DataFrame is a Dataset organized into named columns
 
 # SparkSession
 用SparkSession.builder这个静态成员类来构造一个新的SparkSession（工厂模式）
 
-#DataFrames
-
+# DataFrames
 构造DataFrames
 With a SparkSession, applications can create DataFrames from an existing RDD, from a Hive table, or from Spark data sources
-1.From JSON file: spark.read.json("examples/src/main/resources/people.json") # spark is a SparkSession
-2.From an RDD:
-2.1 当已知DataFrames的schema时：先创建Row，在Row中通过kwargs来指定column的名字，the types are inferred by sampling the whole dataset
+1.From an RDD:
+1.1 当已知DataFrames的schema时：先创建Row，在Row中通过kwargs来指定column的名字，the types are inferred by sampling the whole dataset
 people = parts.map(lambda p: Row(name=p[0], age=int(p[1]))) # create RDD of Row
 schemaPeople = spark.createDataFrame(people)
-2.2 当不知道DataFrames的schema，或者不想一个个去hardcode出来时：Create an RDD of tuples or lists；Create the schema represented by a StructType；Apply the schema to the RDD
+1.2 当不知道DataFrames的schema，或者不想一个个去hardcode出来时：Create an RDD of tuples or lists；Create the schema represented by a StructType；Apply the schema to the RDD
 people = parts.map(lambda p: (p[0], p[1].strip())) #Create an RDD of tuples or lists
 schemaString = "name age"
 fields = [StructField(field_name, StringType(), True) for field_name in schemaString.split()]
 schema = StructType(fields) #Create the schema
 schemaPeople = spark.createDataFrame(people, schema) #Apply the schema to the RDD
+
+2.From data sources
+manually specify the data source that will be used along with any extra options
+JSON: df = spark.read.load("examples/src/main/resources/people.json", format="json")
+CSV: df = spark.read.load("examples/src/main/resources/people.csv",format="csv", sep=":", inferSchema="true", header="true")
 
 Untyped Operations
 不同于RDD，DataFrames的很多操作是untyped的，也就是可以对不同类型的columns一起进行操作
@@ -31,3 +32,15 @@ Print the schema in a tree format：df.printSchema()
 Select only the "name" column： df.select("name").show()
 Select people older than 21：df.filter(df['age'] > 21).show()
 Count people by age：df.groupBy("age").count().show()
+
+Aggregation
+The built-in DataFrames aggregations such as count(), countDistinct(), avg(), max(), min()
+
+存储DataFrames
+普通储存：save
+存为persistent tables：saveAsTable
+bucket and sort: df.write.bucketBy(42, "name").sortBy("age").saveAsTable("people_bucketed")
+partition: df.write.partitionBy("favorite_color").format("parquet").save("namesPartByColor.parquet")
+
+
+
