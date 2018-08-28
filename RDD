@@ -51,6 +51,7 @@ The Shuffle is an expensive operation
 Spark generates sets of tasks - "map" tasks to organize the data, and a set of "reduce" tasks to aggregate it.
 
 Persist 
+存RDD的中间值
 1. By default, each transformed RDD may be recomputed each time you run an action on it. You may persist an RDD in memory using the persist (or cache) method, in which case Spark will keep the elements around on the cluster for much faster access the next time
 2. When you persist an RDD, each node stores any partitions of it that it computes in memory. This allows future actions to be much faster (often by more than 10x)
 3. You can mark an RDD to be persisted using the persist() or cache() methods on it, before the first time it is computed in an action
