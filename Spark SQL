@@ -38,9 +38,16 @@ The built-in DataFrames aggregations such as count(), countDistinct(), avg(), ma
 
 存储DataFrames
 普通储存：save
-存为persistent tables：saveAsTable
+存为Hive persistent tables：saveAsTable
 bucket and sort: df.write.bucketBy(42, "name").sortBy("age").saveAsTable("people_bucketed")
 partition: df.write.partitionBy("favorite_color").format("parquet").save("namesPartByColor.parquet")
 
+Cache DataFrames in memory
+df.cache()
+
+Conversion to/from Pandas
+spark.conf.set("spark.sql.execution.arrow.enabled", "true")
+df = spark.createDataFrame(pdf) # Create a Spark DataFrame from a Pandas DataFrame using Arrow
+result_pdf = df.select("*").toPandas() # Convert the Spark DataFrame back to a Pandas DataFrame using Arrow
 
 
