@@ -15,6 +15,8 @@ API层面
 每一个spark程序都是由 a driver program that runs the user’s main function and executes various parallel operations on a cluster。
 
 RDD: a collection of elements partitioned across the nodes of the cluster，可以进行并行化操作。一个machine上有几个partition，每个partition对应一个task，每个task可以由好几个core去执行。
+DataFrame：API上比RDD更容易使用，更适合工业界的实际场景
+Dataset：比DataFrame更高级的API，DataFrame 等于 Dataset[row]
 
 shared variables：Spark runs a function in parallel as a set of tasks on different nodes, it ships a copy of each variable used in the function to each task
 第一类：broadcast variables，which can be used to cache a value in memory on all nodes
