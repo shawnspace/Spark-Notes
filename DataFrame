@@ -1,6 +1,4 @@
 # SparkSession
-SparkSession is a mere wrapper around SparkContext to offer Spark SQL's structured/SQL features on top of Spark Core's RDDs.
-一个application里可以有好几个SparkSession，但是只有一个SparkContext
 用SparkSession.builder这个静态成员类来构造一个新的SparkSession（工厂模式）
 
 # DataFrames
