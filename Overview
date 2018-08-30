@@ -22,3 +22,10 @@ shared variables：Spark runs a function in parallel as a set of tasks on differ
 第一类：broadcast variables，which can be used to cache a value in memory on all nodes
 第二类：accumulators, which are variables that are only “added” to
 
+Spark SQL
+Spark’s interface for working with structured data. Structured data is considered any data that has a schema.
+1. It provides a DataFrame abstraction to simplify working with structured datasets. DataFrames are similar to tables in a relational database.
+2. It can read and write data in a variety of structured formats (e.g., JSON, Hive Tables, and Parquet).
+3. It lets you query the data using SQL, both inside a Spark program and from external tools that connect to Spark SQL through standard database connectors (JDBC/ ODBC), such as business intelligence tools like Tableau.
+
+
