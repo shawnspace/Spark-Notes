@@ -1,4 +1,6 @@
 # SparkSession
+SparkSession is a mere wrapper around SparkContext to offer Spark SQL's structured/SQL features on top of Spark Core's RDDs.
+一个application里可以有好几个SparkSession，但是只有一个SparkContext
 用SparkSession.builder这个静态成员类来构造一个新的SparkSession（工厂模式）
 
 # DataFrames
@@ -20,8 +22,8 @@ manually specify the data source that will be used along with any extra options
 JSON: df = spark.read.load("examples/src/main/resources/people.json", format="json")
 CSV: df = spark.read.load("examples/src/main/resources/people.csv",format="csv", sep=":", inferSchema="true", header="true")
 
-Untyped Operations
-不同于RDD，DataFrames的很多操作是untyped的，也就是可以对不同类型的columns一起进行操作
+Operations
+RDD中基本的op都有
 Access a column： either by attribute (df.age) or by indexing (df['age'])
 Print the schema in a tree format：df.printSchema()
 Select only the "name" column： df.select("name").show()
