@@ -1,3 +1,8 @@
+#SparkContext
+Only 1 SparkContext for each JVM, tells Spark how to access a cluster.
+conf = SparkConf().setAppName(appName).setMaster(master)
+sc = SparkContext(conf=conf)
+
 # 构造RDD
 1. parallelizing an existing collection in your driver program
 2. referencing a dataset in an external storage system, such as a shared filesystem, HDFS, HBase, or any data source offering a Hadoop InputFormat
