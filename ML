@@ -1,0 +1,22 @@
+#linalg
+Vector:基类，只能是一维的数组
+DenseVector：用numpy array来实现
+SparseVector：可以传入Scipy.sparse
+Vectors：工厂方法
+
+Matrix：基类，二维矩阵
+DenseMatrix：column major：构造时传入的数组会先填满当前的column
+SparseMatrix：CSC格式
+Matrices：工厂方法
+
+#ML Pipelines
+组成部分
+DataFrame:表示数据
+Transformer: includes feature transformers and learned models, implements a method transform(), which converts one DataFrame into another
+Estimator: learning algorithm or any algorithm that fits on data, implements a method fit(), which accepts a DataFrame and produces a Model, which is a Transformer
+Pipeline: consists of a sequence of PipelineStages (每一个stage是一个 Transformers 或者 Estimators)
+Parameters: Estimators and Transformers use a uniform API for specifying parameters
+
+工作流程
+The input DataFrame is transformed as it passes through each stage in Pipelines. In Transformer stages, the transform() method is called on the DataFrame. For Estimator stages, the fit() method is called to produce a Transformer(A) and A’s transform() method is called on the DataFrame.
+A Pipeline is an Estimator. Thus, after a Pipeline’s fit() method runs, it produces a PipelineModel, which is a Transformer. his PipelineModel is used at test time. PipelineModel has the same number of stages as the original Pipeline, but all Estimators in the original Pipeline have become Transformers
