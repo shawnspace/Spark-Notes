@@ -15,8 +15,20 @@ DataFrame:表示数据
 Transformer: includes feature transformers and learned models, implements a method transform(), which converts one DataFrame into another
 Estimator: learning algorithm or any algorithm that fits on data, implements a method fit(), which accepts a DataFrame and produces a Model, which is a Transformer
 Pipeline: consists of a sequence of PipelineStages (每一个stage是一个 Transformers 或者 Estimators)
-Parameters: Estimators and Transformers use a uniform API for specifying parameters
+Parameter: Estimators and Transformers use a uniform API for specifying parameters
 
 工作流程
 The input DataFrame is transformed as it passes through each stage in Pipelines. In Transformer stages, the transform() method is called on the DataFrame. For Estimator stages, the fit() method is called to produce a Transformer(A) and A’s transform() method is called on the DataFrame.
 A Pipeline is an Estimator. Thus, after a Pipeline’s fit() method runs, it produces a PipelineModel, which is a Transformer. his PipelineModel is used at test time. PipelineModel has the same number of stages as the original Pipeline, but all Estimators in the original Pipeline have become Transformers
+
+Parameter
+Param is a named parameter with self-contained documentation.
+ParamMap is a set of (parameter, value) pairs
+设置parameter的2种方法
+1.Set parameters for an instance. E.g., if lr is an instance of LogisticRegression, one could call lr.setMaxIter(10)
+2.Pass a ParamMap to fit() or transform(). Any parameters in the ParamMap will override parameters previously specified via setter methods
+Parameters belong to specific instances of Estimators and Transformers。比如 ParamMap(lr1.maxIter -> 10, lr2.maxIter -> 20)
+
+Saving and Loading Pipelines
+Save a model or a pipeline to disk
+
