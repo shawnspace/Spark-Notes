@@ -1,0 +1,8 @@
+#特征选择
+1. VectorSlicer
+从名为inputCol的column里，按indices或者name来选出特征，选出的特征在名为outputCol的column里。筛选的特征和筛选后的结果都会在DF里。
+2. ChiSqSelector
+使用Chi-squared test来进行特征选择
+
+#特征构建
+1. RFormula
