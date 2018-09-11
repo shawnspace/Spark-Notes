@@ -1,8 +1,72 @@
-#特征选择
+# 特征转换
+Binarizer
+将数值特征离散为二向特征，以threshold参数为分割点。Feature values greater than the threshold are binarized to 1.0; values equal to or less than the threshold are binarized to 0.0
+Both Vector and Double types are supported for inputCol.
+
+StringIndexer
+将string column转化为column of label indices。Indices are in [0, numLabels), ordered by label frequencies
+
+IndexToString
+将StringIndexer的输出逆向转化回string column
+
+# 特征选择
 1. VectorSlicer
 从名为inputCol的column里，按indices或者name来选出特征，选出的特征在名为outputCol的column里。筛选的特征和筛选后的结果都会在DF里。
 2. ChiSqSelector
 使用Chi-squared test来进行特征选择
 
-#特征构建
+# 特征构建
 1. RFormula
+2. PolynomialExpansion
+将输入特征按degree来进行多项式扩展：（x1,x2)就变成了(x1, x2)^3，包含(x1, x1^2, x1^3, x2, x2^2, x2^3, x1x2, x1^2x2, x1x2^2) 
+
+
+# 特征降维
+PCA
+一个estimator
+
+FeatureHasher
+Feature hashing projects a set of categorical or numerical features into a feature vector of specified dimension (typically substantially smaller than that of the original feature space). This is done using the hashing trick to map features to indices in the feature vector.
+
+# NLP相关的特征处理
+Tokenizer
+A simple class provides tokenization
+
+RegexTokenizer 
+more advanced tokenization based on regular expression (regex) matching. By default, the parameter “pattern” (regex, default: "\\s+") is used as delimiters to split the input text.
+
+StopWordsRemover
+It takes as input a sequence of strings (e.g. the output of a Tokenizer) and drops all the stop words from the input sequences. The list of stopwords is specified by the stopWords parameter
+
+n-gram
+NGram class can be used to transform input features into n-grams。The output will consist of a sequence of n-grams where each n-gram is represented by a space-delimited string。
+
+TF: HashingTF 和 CountVectorizer
+HashingTF
+是一个transformer
+将 a bag of words 转化为 fixed-length feature vectors。每个词会被hash为一个新的term，再在这些新的term上进行频率统计。This approach avoids the need to compute a global term-to-index map but it suffers from potential hash collisions。To reduce the chance of collision, we can increase the target feature dimension。
+An optional binary toggle parameter 可以把不为0的特征全部转换为1，从而得到presence or not特征
+CountVectorizer
+CountVectorizer can be used as an Estimator to extract the vocabulary, and generates a CountVectorizerModel。CountVectorizerModel 可以将 documents 转化为 vectors of tf。这里的vectors of tf是稀疏表示：3,[0,3,5],[1.0,1.0,1.0]
+
+IDF: IDF
+IDF is an Estimator which is fit on a dataset and produces an IDFModel. The IDFModel takes feature vectors (generally created from HashingTF or CountVectorizer) and scales each feature。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
