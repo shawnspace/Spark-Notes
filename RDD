@@ -2,7 +2,7 @@
 conf = SparkConf().setAppName(appName).setMaster(master)
 sc = SparkContext(conf=conf)
 
-# 构造RDD
+# RDD
 1. parallelizing an existing collection in your driver program
 2. referencing a dataset in an external storage system, such as a shared filesystem, HDFS, HBase, or any data source offering a Hadoop InputFormat
 
@@ -27,6 +27,10 @@ Note: 传递class里的函数和成员给spark的话，会将整个object复制�
 1. 每个task有一个自己的closure
 2. closure（constructs like loops or locally defined methods）should not be used to mutate some global state。The variables within the closure sent to each executor are now copies in each worker node. 应该使用accumulator 变量来存这种需要被更新的变量。
 
+如何使用只能Key-Value Pairs的operation
+1. a few special operations are only available on RDDs of key-value pairs
+2. In Python, these operations work on RDDs of tuples such as ('a', 2), where 'a' is the key and 2 is the value
+
 Action
 多半是一些统计性的操作，来向driver node返回一些小数据
 reduce(func) Aggregate the elements of the dataset
@@ -49,18 +53,20 @@ reduceByKey(func, [numPartitions])	When called on a dataset of (K, V) pairs, ret
 join(otherDataset, [numPartitions])	When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (V, W)) pairs with all pairs of elements for each key. Outer joins are supported through leftOuterJoin, rightOuterJoin, and fullOuterJoin.
 cogroup(otherDataset, [numPartitions])	When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (Iterable<V>, Iterable<W>)) tuples. This operation is also called groupWith.
 
-Shuffle operation
-re-distributing data so that it’s grouped differently across partitions
-Operations which can cause a shuffle include repartition operations like repartition and coalesce, ‘ByKey operations (except for counting) like groupByKey and reduceByKey, and join operations like cogroup and join
-The Shuffle is an expensive operation
-Spark generates sets of tasks - "map" tasks to organize the data, and a set of "reduce" tasks to aggregate it.
-
 Persist 
-存RDD的中间值
+存RDD在不同的storage level，常用来提升计算效率
 1. By default, each transformed RDD may be recomputed each time you run an action on it. You may persist an RDD in memory using the persist (or cache) method, in which case Spark will keep the elements around on the cluster for much faster access the next time
 2. When you persist an RDD, each node stores any partitions of it that it computes in memory. This allows future actions to be much faster (often by more than 10x)
 3. You can mark an RDD to be persisted using the persist() or cache() methods on it, before the first time it is computed in an action
 4. persist()可以指定不同的storage level
+5. 选择不同的storage和serialize就是在memory和计算效率直接做trade off，因为serialize也需要耗费计算时间。
+
+Shuffle operation
+1.re-distributing data so that it’s grouped differently across partitions
+2.Operations which can cause a shuffle include repartition operations like repartition and coalesce, ‘ByKey operations (except for counting) like groupByKey and reduceByKey, and join operations like cogroup and join
+3.The Shuffle is an expensive operation
+4.Spark generates sets of tasks - "map" tasks to organize the data, and a set of "reduce" tasks to aggregate it.
+5.可以进行一些微调
 
 #Shared variable
 
