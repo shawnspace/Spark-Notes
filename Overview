@@ -5,8 +5,8 @@ core：一个core就是一个cpu之类的计算单位
 memory
 
 系统层面
-Task：Each task is run as a process thread in executor JVM
-Executor：Each Executor in Spark hosts multiple partitions and as a result multiple tasks during processing of a stage and the subsequent jobs associated with the code that was executed。
+Task：Each task is run as a process thread in executor JVM。每个task有自己的一个closure：属于自己的varible或method
+Executor：Each Executor in Spark hosts one task during processing of a stage and the subsequent jobs associated with the code that was executed。
 Partition: 对数据的分区
 JVM：每个node上有一个JVM，一个JVM里有好几个executor。
 
