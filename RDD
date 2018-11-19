@@ -24,7 +24,8 @@ Passing Functions to Spark
 Note: 传递class里的函数和成员给spark的话，会将整个object复制过去，造成空间浪费。最好将类的成员赋值给一个局部变量，再传递这个局部变量
 
 关于closure
-closure（constructs like loops or locally defined methods）should not be used to mutate some global state。The variables within the closure sent to each executor are now copies in each worker node. 应该使用accumulator 变量来存这种需要被更新的变量。
+1. 每个task有一个自己的closure
+2. closure（constructs like loops or locally defined methods）should not be used to mutate some global state。The variables within the closure sent to each executor are now copies in each worker node. 应该使用accumulator 变量来存这种需要被更新的变量。
 
 Action
 多半是一些统计性的操作，来向driver node返回一些小数据
