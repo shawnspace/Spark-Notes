@@ -1,0 +1,17 @@
+# Programming Model
+先定义图，再开启stream，执行计算
+
+# StreamingContext
+先create SparkContext，再create StreamingContext，是entry point
+
+# Discretized Streams (DStreams)
+1. 代表了一个data stream
+2. 内部是RDD的序列：spark将data stream按时间interval来划分，每一个interval的数据作为一个batch，存到一个RDD里。n个interval就有n个RDD
+3. 所有的transformation 和 action 都可以对DStream使用，内部都会转化到对每个interval的RDD使用
+
+# Input DStreams and Receivers
+1. 可以从Basic source和 advance source创造 Input DStream
+2. 除了Filesystem中创造的 input source外，每一个input stream都有一个receiver。
+
+
+
