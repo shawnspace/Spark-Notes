@@ -2,15 +2,14 @@
 cluster
 node
 core：一个core就是一个cpu之类的计算单位
-memory
 
-系统层面
+OS层面
 Task：Each task is run as a process thread in executor JVM。每个task有自己的一个closure：属于自己的varible或method
-Executor：Each Executor in Spark hosts one task during processing of a stage and the subsequent jobs associated with the code that was executed。
+Executor：Each Executor hosts multiple tasks during processing of a stage and the subsequent jobs associated with the code that was executed。
 Partition: 对数据的分区
 JVM：每个node上有一个JVM，一个JVM里有好几个executor。
 
-关系：一个node上有几个partition，每个partition对应一个task，一个Executor对应好几个task，每个task可以由好几个core去执行。
+关系：一个node上有几个partition，每个partition对应一个task，一个Executor执行好几个task，每个task可以由好几个core去执行。
 
 API层面
 每一个spark程序都是由 a driver program that runs the user’s main function and executes various parallel operations on a cluster。
