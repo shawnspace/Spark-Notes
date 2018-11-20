@@ -39,4 +39,10 @@ Shared variables：Spark runs a function in parallel as a set of tasks on differ
 Spark SQL
 Spark专门用来处理structured data的engine（不光是执行SQL语句）
 
+Spark Streaming
+用来处理RDD streaming的，执行在Spark engine上
+
+Spark Structured Streaming
+用来处理结构化数据 streaming的，执行在Spark SQL engine上
+
 
