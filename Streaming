@@ -2,7 +2,7 @@
 先定义图，再开启stream，执行计算
 
 # StreamingContext
-先create SparkContext，再create StreamingContext，是entry point
+先create SparkContext，再从中create StreamingContext，是entry point
 
 # Discretized Streams (DStreams)
 1. 代表了一个data stream
@@ -12,6 +12,13 @@
 # Input DStreams and Receivers
 1. 可以从Basic source和 advance source创造 Input DStream
 2. 除了Filesystem中创造的 input source外，每一个input stream都有一个receiver。
+
+# Transformation operations
+1. 支持大部分RDD中常见的transformation
+2. UpdateStateByKey Operation：传递一个update state的函数，在每一个batch中，会调用该函数进行state的更新
+3. Transform Operation: 可以使用DStream API中没有出现的RDD op到stream上
+4. Window Operations：可以把不同batch的RDD聚合到一个window中
+5. Join
 
 
 
