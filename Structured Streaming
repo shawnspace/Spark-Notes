@@ -1,0 +1,15 @@
+# Overview
+针对结构化数据的streaming API，内部计算是在spark SQL engine上完成。
+其代码和在static dataframe上的代码一致，不需要修改。
+
+# Basic Concept
+1. 整个data stream被当成一个DataFrame，只不过是unbounded的table。每个数据是一个row
+2. 在data stream上的计算图，会产生一个新的DataFrame，叫result table。每过一个time interval，更新一次result table里的内容：可能是新增row，也可能是修改已经存在的row
+3. Output：可以把result table输出到外部存储中
+4. 针对 event-time data：就是一个column，然后以grouping和aggregation操作来进行处理
+
+# Operations
+1. 同DataFrame/Dataset的API一样
+
+# 构造Streaming
+1. 可以从file，Socket和Kafka source中建立
