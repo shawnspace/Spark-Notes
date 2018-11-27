@@ -1,14 +1,16 @@
 # Overview
 针对结构化数据的streaming API，内部计算是在spark SQL engine上完成。
-其代码和在static dataframe上的代码基本一致。
+整个data stream就是一个DataFrame，其代码和在static dataframe上的代码基本一致。
+目前是micro-batch processing模式，就是内部把data stream分成不同的batch。Continuous processing就是每来一个数据就进行计算，而不用等到一个trigger，但还在实验中，其延迟会低于micro-batch processing
 
 # Basic Concept
-1. 整个data stream被当成一个DataFrame，只不过是unbounded的table。每个数据是一个row
+1. 整个data stream就是一个DataFrame，只不过是unbounded的table。每个数据是一个row
 2. 在data stream上的计算图，会产生一个新的DataFrame，叫result table。每过一个time interval，更新一次result table里的内容：可能是新增row，也可能是修改已经存在的row
 3. Output：可以把result table输出到外部存储中
 
 # Input Streaming
 1. 可以从file，Socket和Kafka source中建立
+2. 使用Dataset.readStream()来建立，再使用load来得到一个DataFrame，表示stream。
 
 # Transformation Operations
 1. Selection, Projection, Aggregation等SQL的operation，又叫untyped operation
@@ -22,4 +24,13 @@
 2. 用start启动streaming后，得到一个StreamingQuery的handle
 3. 要指定output mode和output sink
   3.1 Foreach and ForeachBatch sink：可以对output streaming使用arbitrary operations and writing logic
-4. 
+4. Trigger：设置streaming data processing的时间
+
+# Managing Streaming Query
+1. 一些管理单个streamingQuery的操作
+2. 一个sparksession中，多个stream可以并行的在cluster上运行，用sparkSession.streams()来得到StreamingQueryManager
+
+# Monitoring Streaming Queries
+1. 查看上一个trigger后的整体执行情况：streamingQuery.lastProgress()
+2. 查看当前正在做什么：streamingQuery.status() 
+
