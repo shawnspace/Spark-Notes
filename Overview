@@ -45,4 +45,12 @@ Spark Streaming
 Spark Structured Streaming
 用来处理结构化数据 streaming的，执行在Spark SQL engine上
 
+Library结构
+pyspark
+  RDD, Broadcast, Accumulator等关于RDD的class
+  pyspark.sql SQL的subpackage，包括了Structured Streaming的功能（跟着DataFrame）
+  pyspark.streaming DStream的subpackage
+  pyspark.ml DataFrame-based machine learning APIs的subpackage
+  pyspark.mllib RDD based API的subpackage
+
 
