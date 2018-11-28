@@ -34,3 +34,7 @@
 1. 查看上一个trigger后的整体执行情况：streamingQuery.lastProgress()
 2. 查看当前正在做什么：streamingQuery.status() 
 
+# Recover from Checkpoint
+1. 可以在writeStream开始前指定checkpoint path。spark会将当前进度保存到checkpoint中，以便发生failure时恢复计算
+
+
