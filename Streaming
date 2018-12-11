@@ -3,6 +3,9 @@
 
 # StreamingContext
 先create SparkContext，再从中create StreamingContext，是entry point
+从StreamingContext中再创建不同source的streaming
+一个JVM中只能有一个StreamingContext，但一个StreamingContext可以有多个streaming，但是一旦停止就不能restart，只能创造新的StreamingContext
+但是SparkContext可以reuse to create multiple StreamingContexts
 
 # Discretized Streams (DStreams)
 1. 代表了一个data stream
