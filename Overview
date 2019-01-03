@@ -2,20 +2,19 @@
 cluster
 node
 core：一个core就是一个cpu之类的计算单位，node上一般有好多core
-master：控制node，用于分配任务和监控worker
-worker：执行node，创建executor线程并执行计算
 
 OS层面
-Partition: 对数据的分区，每个partition对应一个task
-Task：Each task is run as a process thread in executor JVM。每个task有自己的一个closure：属于自己的varible或method
-Executor：Each Executor hosts 1 task during processing of a stage and the subsequent jobs associated with the code that was executed。
+ResourceManager:资源管理
+Client：提交Application并监控Application
+ApplicationMaster：向ResourceManager申请Container资源运行Executor进程，并启动Driver
+Driver：向ApplicationMaster申请资源，并进行任务调度
+Executor：计算任务并上报给driver，每个Executor对应一个JVM
 
-与硬件层面的联系：每个worker上有可以有好几个executor。
+Partition: 对数据的分区，每个partition对应一个task
+Task：Each task is run as a 线程 in executor。每个task有自己的一个closure：属于自己的varible或method
 
 
 API层面
-每一个spark程序都是由 a driver program that runs the user’s main function and executes various parallel operations on a cluster。
-
 SparkContext
 Entry point before 2.0
 Create RDD and manipulate RDD API
